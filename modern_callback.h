@@ -1,3 +1,19 @@
+/*
+ *Copyright 2020 lanzhengpeng
+ *
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+
 //现代回调(Modern Callback)
 //
 //一个使用回调处理结果的异步函数，会涉及以下概念：
@@ -57,7 +73,7 @@ template<typename _Input_t, typename _Callable_t>
 auto tostring_async(_Input_t&& value, _Callable_t&& token)
 {
 	//适配器类型
-	using _Adapter_t = modern_callback::adapter_t<typename std::remove_reference_t<std::remove_cv_t<_Callable_t>>, void(std::string)>;
+	using _Adapter_t = modern_callback::adapter_t<std::remove_cv_t<std::remove_reference_t<_Callable_t>>, void(std::string)>;
 	//通过适配器获得兼容_Signature_t类型的真正的回调，以及返回值_Return_t
 	auto adapter = _Adapter_t::traits(std::forward<_Callable_t>(token));
 
