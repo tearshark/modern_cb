@@ -1,16 +1,11 @@
 ﻿//依赖 https://github.com/tearshark/modern_cb.git 项目
 //依赖 https://github.com/tearshark/librf.git 项目
 
-#include "librf.h"
-#include "modern_callback.h"
-#include "use_future.h"
-#include "use_librf.h"
-
-#include <chrono>
-#include <iostream>
-#include <string>
-#include <thread>
 #include <future>
+#include <string>
+#include <iostream>
+
+#include "modern_callback.h"
 
 //原旨主义的异步函数，其回调写法大致如下
 template<typename _Input_t, typename _Callable_t>
@@ -50,12 +45,8 @@ auto tostring_async(_Input_t&& value, _Callable_t&& token)
 			callback(std::to_string(value));
 		}).detach();
 
-	MODERN_CALLBACK_RETURN();
+		MODERN_CALLBACK_RETURN();
 }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-//使用范例
 
 //演示异步库有多个异步回调函数，只要按照Modern Callback范式去做回调，就不再需要写额外的代码，就可以适配到future+librf，以及更多的其他库
 template<typename _Ty1, typename _Ty2, typename _Callable_t>
@@ -70,7 +61,7 @@ auto add_async(_Ty1&& val1, _Ty2&& val2, _Callable_t&& token)
 			callback(val1 + val2);
 		}).detach();
 
-	MODERN_CALLBACK_RETURN();
+		MODERN_CALLBACK_RETURN();
 }
 
 //演示异步库有多个异步回调函数，只要按照Modern Callback范式去做回调，就不再需要写额外的代码，就可以适配到future+librf，以及更多的其他库
@@ -92,21 +83,23 @@ auto muldiv_async(_Ty1&& val1, _Ty2&& val2, _Callable_t&& token)
 				callback(nullptr, v1, val1 / val2);
 		}).detach();
 
-	MODERN_CALLBACK_RETURN();
+		MODERN_CALLBACK_RETURN();
 }
 
-void resumable_main_modern_cb()
+#include "use_future.h"
+
+static void example_future()
 {
 	using namespace std::literals;
 
 	//使用lambda作为异步回调函数，传统用法
-	tostring_async_originalism(-1.0, [](std::string && value)
+	tostring_async_originalism(-1.0, [](std::string&& value)
 		{
 			std::cout << value << std::endl;
 		});
 	std::this_thread::sleep_for(0.5s);
 
-	tostring_async(1.0, [](std::string && value)
+	tostring_async(1.0, [](std::string&& value)
 		{
 			std::cout << value << std::endl;
 		});
@@ -120,7 +113,13 @@ void resumable_main_modern_cb()
 
 	std::future<std::string> f2 = tostring_async(6.0f, std_future);
 	std::cout << f2.get() << std::endl;
+}
 
+#include "librf.h"
+#include "use_librf.h"
+
+static void example_librf()
+{
 	//支持librf的用法
 	GO
 	{
@@ -142,7 +141,7 @@ void resumable_main_modern_cb()
 			std::cout << result << std::endl;
 		}
 #ifndef __clang__
-		catch (const std::exception& e)
+		catch (const std::exception & e)
 		{
 			std::cout << "exception signal : " << e.what() << std::endl;
 		}
@@ -154,4 +153,12 @@ void resumable_main_modern_cb()
 	};
 
 	resumef::this_scheduler()->run_until_notask();
+}
+
+int main()
+{
+	example_future();
+	example_librf();
+
+	return 0;
 }

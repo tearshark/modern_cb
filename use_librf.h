@@ -1,6 +1,6 @@
-//
-//ͨ���ִ��ص�(Modern Callback)�� ʹ�ûص�������ģ�ͣ�
-//���첽�ص�������չ��֧��futureģʽ��������ģʽ���Լ�Э�̡�
+﻿//
+//通过现代回调(Modern Callback)， 使用回调适配器模型，
+//将异步回调函数扩展到支持future模式，调用链模式，以及协程。
 
 #pragma once
 #include "future_detail.h"
@@ -9,7 +9,7 @@ namespace modern_callback
 {
 	namespace detail
 	{
-		//ͬ������������֧��C++20��Э�̵�����һϵ���ࣨ��ʵ��������ҵ�����Ŀ�ģ�
+		//同理，可以制作支持C++20的协程的下列一系列类（其实，这才是我的最终目的）
 		struct use_librf_t
 		{
 			template<typename _Result_t>
@@ -25,8 +25,8 @@ namespace modern_callback
 	{
 	};
 
-	//���ԣ������ڵĿ����ǣ�֧���첽�����Ŀ⣬�����������ƻص�����������֧��C++20��Э�̡��Լ�future::then��������������
-	//����ǡ�Ħ��C++����
+	//所以，我现在的看法是，支持异步操作的库，尽可能如此设计回调。这样便于支持C++20的协程。以及future::then这样的任务链。
+	//这才是“摩登C++”！
 }
 
 constexpr modern_callback::detail::use_librf_t use_librf{};

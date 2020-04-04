@@ -1,6 +1,6 @@
-//
-//Í¨¹ıÏÖ´ú»Øµ÷(Modern Callback)£¬ Ê¹ÓÃ»Øµ÷ÊÊÅäÆ÷Ä£ĞÍ£¬
-//½«Òì²½»Øµ÷º¯ÊıÀ©Õ¹µ½Ö§³ÖfutureÄ£Ê½£¬µ÷ÓÃÁ´Ä£Ê½£¬ÒÔ¼°Ğ­³Ì¡£
+ï»¿//
+//é€šè¿‡ç°ä»£å›è°ƒ(Modern Callback)ï¼Œ ä½¿ç”¨å›è°ƒé€‚é…å™¨æ¨¡å‹ï¼Œ
+//å°†å¼‚æ­¥å›è°ƒå‡½æ•°æ‰©å±•åˆ°æ”¯æŒfutureæ¨¡å¼ï¼Œè°ƒç”¨é“¾æ¨¡å¼ï¼Œä»¥åŠåç¨‹ã€‚
 
 #pragma once
 #include <future>
@@ -10,8 +10,8 @@ namespace modern_callback
 {
 	namespace detail
 	{
-		//Ò»¡¢×öÒ»¸öÊ¹ÓÃstd::promise/std::futureµÄ¸¨ÖúÀà¡£
-		//Õâ¸öÀà»¹¸ºÔğİÍÈ¡promise/future¶ÔµÄÀàĞÍ¡£
+		//ä¸€ã€åšä¸€ä¸ªä½¿ç”¨std::promise/std::futureçš„è¾…åŠ©ç±»ã€‚
+		//è¿™ä¸ªç±»è¿˜è´Ÿè´£èƒå–promise/futureå¯¹çš„ç±»å‹ã€‚
 		struct std_future_t
 		{
 			template<typename _Result_t>
@@ -22,20 +22,20 @@ namespace modern_callback
 		};
 	}
 
-	//¶ş¡¢Æ«ÌØ»¯_Callable_tÎªstd_future_tÀàĞÍµÄadapter_t
-	//ÕæÕıµÄ»Øµ÷ÀàĞÍÊÇcallback_t£¬·µ»ØÀàĞÍ_Return_tÊÇreturn_t¡£
-	//ÅäºÏcallback_tµÄpromise<result_type>£¬ºÍreturn_tµÄfuture<result_type>£¬ÕıºÃ×é³ÉÒ»¶Ôpromise/future¶Ô¡£
-	//promiseÔÚÕæÕıµÄ»Øµ÷ÀïÉèÖÃ½á¹ûÖµ£»
-	//future·µ»Ø¸øµ÷ÓÃÕß»ñÈ¡½á¹ûÖµ¡£
+	//äºŒã€åç‰¹åŒ–_Callable_tä¸ºstd_future_tç±»å‹çš„adapter_t
+	//çœŸæ­£çš„å›è°ƒç±»å‹æ˜¯callback_tï¼Œè¿”å›ç±»å‹_Return_tæ˜¯return_tã€‚
+	//é…åˆcallback_tçš„promise<result_type>ï¼Œå’Œreturn_tçš„future<result_type>ï¼Œæ­£å¥½ç»„æˆä¸€å¯¹promise/futureå¯¹ã€‚
+	//promiseåœ¨çœŸæ­£çš„å›è°ƒé‡Œè®¾ç½®ç»“æœå€¼ï¼›
+	//futureè¿”å›ç»™è°ƒç”¨è€…è·å–ç»“æœå€¼ã€‚
 	template<typename R, typename... _Result_t>
 	struct adapter_t<detail::std_future_t, R(_Result_t...)> : public future_detail::adapter_impl_t<detail::std_future_t, _Result_t...>
 	{
 	};
 }
 
-//Èı¡¢ÉêÃ÷Õâ¸ö¸¨ÖúÀàµÄÈ«¾Ö±äÁ¿¡£²»ÉêÃ÷Õâ¸ö±äÁ¿Ò²ĞĞ£¬¾ÍÊÇÃ¿´ÎÒªĞ´use_future_t{}£¬Âé·³Ğ©¡£
-//ÒÔºó¾ÍÊ¹ÓÃstd_future£¬Ìæ´úÒì²½º¯ÊıµÄtoken²ÎÊıÁË¡£
-//Õâ¸ö²ÎÊıÆäÊµ²»ĞèÒªÊµÖÊ´«²Î£¬×îºó»á±»±àÒëÆ÷ÓÅ»¯Ã»ÁË¡£
-//½ö½öÊÇÒªÖ¸¶¨_Callable_tµÄÀàĞÍÎªstd_future_t£¬
-//´Ó¶øÔÚÒì²½º¯ÊıÄÚ£¬Ê¹ÓÃÆ«ÌØ»¯µÄadapter_t<std_future_t, ...>¶øÒÑ¡£
+//ä¸‰ã€ç”³æ˜è¿™ä¸ªè¾…åŠ©ç±»çš„å…¨å±€å˜é‡ã€‚ä¸ç”³æ˜è¿™ä¸ªå˜é‡ä¹Ÿè¡Œï¼Œå°±æ˜¯æ¯æ¬¡è¦å†™use_future_t{}ï¼Œéº»çƒ¦äº›ã€‚
+//ä»¥åå°±ä½¿ç”¨std_futureï¼Œæ›¿ä»£å¼‚æ­¥å‡½æ•°çš„tokenå‚æ•°äº†ã€‚
+//è¿™ä¸ªå‚æ•°å…¶å®ä¸éœ€è¦å®è´¨ä¼ å‚ï¼Œæœ€åä¼šè¢«ç¼–è¯‘å™¨ä¼˜åŒ–æ²¡äº†ã€‚
+//ä»…ä»…æ˜¯è¦æŒ‡å®š_Callable_tçš„ç±»å‹ä¸ºstd_future_tï¼Œ
+//ä»è€Œåœ¨å¼‚æ­¥å‡½æ•°å†…ï¼Œä½¿ç”¨åç‰¹åŒ–çš„adapter_t<std_future_t, ...>è€Œå·²ã€‚
 constexpr modern_callback::detail::std_future_t std_future{};

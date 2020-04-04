@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *Copyright 2020 lanzhengpeng
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +14,36 @@
  *limitations under the License.
  */
 
-//ÏÖ´ú»Øµ÷(Modern Callback)
+//ç°ä»£å›è°ƒ(Modern Callback)
 //
-//Ò»¸öÊ¹ÓÃ»Øµ÷´¦Àí½á¹ûµÄÒì²½º¯Êı£¬»áÉæ¼°ÒÔÏÂ¸ÅÄî£º
-//_Input_t...£ºÒì²½º¯ÊıµÄÊäÈë²ÎÊı£»
-//_Signature_t: ´ËÒì²½»Øµ÷µÄº¯ÊıÇ©Ãû£»Ó¦µ±Âú×ã¡®void(_Exception_t, _Result_t...)¡¯»òÕß¡®void(_Result_t...)¡¯ÀàĞÍ£»
-//_Callable_t£º»Øµ÷º¯Êı»ò±ê¼Ç£¬Èç¹ûÊÇ»Øµ÷º¯Êı£¬ÔòĞèÒª·ûºÏ_Signature_tµÄÇ©ÃûÀàĞÍ¡£Õâ¸ö»Øµ÷£¬±ØĞëµ÷ÓÃÒ»´Î£¬ÇÒÖ»ÄÜµ÷ÓÃÒ»´Î£»
-//_Return_t£ºÒì²½º¯ÊıµÄ·µ»ØÖµ£»
-//_Result_t...£ºÒì²½º¯ÊıÍê³ÉºóµÄ½á¹ûÖµ£¬×÷Îª»Øµ÷º¯ÊıµÄÈë²Î²¿·Ö£»Õâ¸ö²ÎÊı¿ÉÒÔÓĞÁãÖÁ¶à¸ö£»
-//_Exception_t£º»Øµ÷º¯ÊıµÄÒì³££¬ Èç¹û²»Ï²»¶Òì³£µÄÔòºöÂÔÕâ¸ö²¿·Ö£¬µ«¾ÍµÃÒì²½´úÂë½«Òì³£´¦ÖÃÍ×µ±£»
+//ä¸€ä¸ªä½¿ç”¨å›è°ƒå¤„ç†ç»“æœçš„å¼‚æ­¥å‡½æ•°ï¼Œä¼šæ¶‰åŠä»¥ä¸‹æ¦‚å¿µï¼š
+//_Input_t...ï¼šå¼‚æ­¥å‡½æ•°çš„è¾“å…¥å‚æ•°ï¼›
+//_Signature_t: æ­¤å¼‚æ­¥å›è°ƒçš„å‡½æ•°ç­¾åï¼›åº”å½“æ»¡è¶³â€˜void(_Exception_t, _Result_t...)â€™æˆ–è€…â€˜void(_Result_t...)â€™ç±»å‹ï¼›
+//_Callable_tï¼šå›è°ƒå‡½æ•°æˆ–æ ‡è®°ï¼Œå¦‚æœæ˜¯å›è°ƒå‡½æ•°ï¼Œåˆ™éœ€è¦ç¬¦åˆ_Signature_tçš„ç­¾åç±»å‹ã€‚è¿™ä¸ªå›è°ƒï¼Œå¿…é¡»è°ƒç”¨ä¸€æ¬¡ï¼Œä¸”åªèƒ½è°ƒç”¨ä¸€æ¬¡ï¼›
+//_Return_tï¼šå¼‚æ­¥å‡½æ•°çš„è¿”å›å€¼ï¼›
+//_Result_t...ï¼šå¼‚æ­¥å‡½æ•°å®Œæˆåçš„ç»“æœå€¼ï¼Œä½œä¸ºå›è°ƒå‡½æ•°çš„å…¥å‚éƒ¨åˆ†ï¼›è¿™ä¸ªå‚æ•°å¯ä»¥æœ‰é›¶è‡³å¤šä¸ªï¼›
+//_Exception_tï¼šå›è°ƒå‡½æ•°çš„å¼‚å¸¸ï¼Œ å¦‚æœä¸å–œæ¬¢å¼‚å¸¸çš„åˆ™å¿½ç•¥è¿™ä¸ªéƒ¨åˆ†ï¼Œä½†å°±å¾—å¼‚æ­¥ä»£ç å°†å¼‚å¸¸å¤„ç½®å¦¥å½“ï¼›
 //
-//ÔÚ»Øµ÷ÊÊÅäÆ÷Ä£ĞÍÀï£¬_Input_t.../_Result_t/_Exception_t(¿ÉÑ¡)ÊÇÒì²½º¯ÊıÌá¹©µÄ¹¦ÄÜËù¹ÌÓĞµÄ²¿·Ö£»_Callable_t/_Return_t
-//²¿·Ö²¢²»Ö±½ÓÊ¹ÓÃ£¬¶øÊÇÍ¨¹ıÊÊÅäÆ÷È¥ÁíÍâ´¦Àí¡£ÕâÑù¸øÓèÊÊÅäÆ÷Ò»´ÎÀ©Õ¹µ½futureÄ£Ê½£¬µ÷ÓÃÁ´Ä£Ê½µÄ»ú»á£¬ÒÔ¼°Ö§³ÖĞ­³ÌµÄ»ú»á¡£
+//åœ¨å›è°ƒé€‚é…å™¨æ¨¡å‹é‡Œï¼Œ_Input_t.../_Result_t/_Exception_t(å¯é€‰)æ˜¯å¼‚æ­¥å‡½æ•°æä¾›çš„åŠŸèƒ½æ‰€å›ºæœ‰çš„éƒ¨åˆ†ï¼›_Callable_t/_Return_t
+//éƒ¨åˆ†å¹¶ä¸ç›´æ¥ä½¿ç”¨ï¼Œè€Œæ˜¯é€šè¿‡é€‚é…å™¨å»å¦å¤–å¤„ç†ã€‚è¿™æ ·ç»™äºˆé€‚é…å™¨ä¸€æ¬¡æ‰©å±•åˆ°futureæ¨¡å¼ï¼Œè°ƒç”¨é“¾æ¨¡å¼çš„æœºä¼šï¼Œä»¥åŠæ”¯æŒåç¨‹çš„æœºä¼šã€‚
 
 #pragma once
 
 #include <tuple>
 
-//×¼±¸return_void_tºÍadapter_t¸øÒì²½º¯ÊıÊ¹ÓÃ
+//å‡†å¤‡return_void_tå’Œadapter_tç»™å¼‚æ­¥å‡½æ•°ä½¿ç”¨
 namespace modern_callback
 {
-	//Í¨¹ıÒ»¸ö¼ä½ÓµÄÀàÀ´½â¾ö·µ»ØvoidµÄÓï·¨ÎÊÌâ£¬ÒÔ±ãÓÚÓÅ»¯·µ»ØÖµ
+	//é€šè¿‡ä¸€ä¸ªé—´æ¥çš„ç±»æ¥è§£å†³è¿”å›voidçš„è¯­æ³•é—®é¢˜ï¼Œä»¥ä¾¿äºä¼˜åŒ–è¿”å›å€¼
 	struct return_void_t
 	{
 		void get() {}
 	};
 
-	//»Øµ÷ÊÊÅäÆ÷µÄÄ£°åÀà
-	//_Callable_t Òª·ûºÏ _Signature_t Ç©Ãû
-	//Õâ¸öÀà³ıÁË×ªÒÆtokenÍâ£¬²»×öÈÎºÎÓĞĞ§µÄ¹¤×÷
-	//ÓĞĞ§¹¤×÷µÈ´ıÌØÁĞ»¯µÄÀàÈ¥×ö
+	//å›è°ƒé€‚é…å™¨çš„æ¨¡æ¿ç±»
+	//_Callable_t è¦ç¬¦åˆ _Signature_t ç­¾å
+	//è¿™ä¸ªç±»é™¤äº†è½¬ç§»tokenå¤–ï¼Œä¸åšä»»ä½•æœ‰æ•ˆçš„å·¥ä½œ
+	//æœ‰æ•ˆå·¥ä½œç­‰å¾…ç‰¹åˆ—åŒ–çš„ç±»å»åš
 	template<typename _Callable_t, typename _Signature_t>
 	struct adapter_t
 	{
@@ -57,7 +57,7 @@ namespace modern_callback
 	};
 }
 
-//»òÕßºê°æ±¾Ğ´·¨
+//æˆ–è€…å®ç‰ˆæœ¬å†™æ³•
 #define MODERN_CALLBACK_TRAITS(_Token_value, _Signature_t) \
 	using _Adapter_t__ = modern_callback::adapter_t<std::remove_cv_t<std::remove_reference_t<_Callable_t>>, _Signature_t>; \
 	auto _Adapter_value__ = _Adapter_t__::traits(std::forward<_Callable_t>(_Token_value))
@@ -65,19 +65,19 @@ namespace modern_callback
 #define MODERN_CALLBACK_RETURN() return std::move(std::get<1>(_Adapter_value__)).get()
 
 #if 0
-//tostring_async ÑİÊ¾ÁËÔÚÆäËûÏß³ÌÀï£¬½«_Input_tµÄÊäÈëÖµ£¬×ª»¯Îªstd::stringÀàĞÍµÄ_Result_t¡£
-//È»ºóµ÷ÓÃ_Signature_tÎª ¡®void(std::string &&)¡¯ ÀàĞÍµÄ _Callable_t¡£
-//ºöÊÓÒì³£´¦Àí£¬¹ÊÃ»ÓĞ_Exception_t¡£
+//tostring_async æ¼”ç¤ºäº†åœ¨å…¶ä»–çº¿ç¨‹é‡Œï¼Œå°†_Input_tçš„è¾“å…¥å€¼ï¼Œè½¬åŒ–ä¸ºstd::stringç±»å‹çš„_Result_tã€‚
+//ç„¶åè°ƒç”¨_Signature_tä¸º â€˜void(std::string &&)â€™ ç±»å‹çš„ _Callable_tã€‚
+//å¿½è§†å¼‚å¸¸å¤„ç†ï¼Œæ•…æ²¡æœ‰_Exception_tã€‚
 //
 template<typename _Input_t, typename _Callable_t>
 auto tostring_async(_Input_t&& value, _Callable_t&& token)
 {
-	//ÊÊÅäÆ÷ÀàĞÍ
+	//é€‚é…å™¨ç±»å‹
 	using _Adapter_t = modern_callback::adapter_t<std::remove_cv_t<std::remove_reference_t<_Callable_t>>, void(std::string)>;
-	//Í¨¹ıÊÊÅäÆ÷»ñµÃ¼æÈİ_Signature_tÀàĞÍµÄÕæÕıµÄ»Øµ÷£¬ÒÔ¼°·µ»ØÖµ_Return_t
+	//é€šè¿‡é€‚é…å™¨è·å¾—å…¼å®¹_Signature_tç±»å‹çš„çœŸæ­£çš„å›è°ƒï¼Œä»¥åŠè¿”å›å€¼_Return_t
 	auto adapter = _Adapter_t::traits(std::forward<_Callable_t>(token));
 
-	//callbackÓëtokenÎ´±ØÊÇÍ¬Ò»¸ö±äÁ¿£¬ÉõÖÁÎ´±ØÊÇÍ¬Ò»¸öÀàĞÍ
+	//callbackä¸tokenæœªå¿…æ˜¯åŒä¸€ä¸ªå˜é‡ï¼Œç”šè‡³æœªå¿…æ˜¯åŒä¸€ä¸ªç±»å‹
 	std::thread([callback = std::move(std::get<0>(adapter)), value = std::forward<_Input_t>(value)]
 		{
 			using namespace std::literals;
@@ -85,7 +85,7 @@ auto tostring_async(_Input_t&& value, _Callable_t&& token)
 			callback(std::to_string(value));
 		}).detach();
 
-	//·µ»ØÊÊÅäÆ÷µÄ_Return_t±äÁ¿
+	//è¿”å›é€‚é…å™¨çš„_Return_tå˜é‡
 	return std::move(std::get<1>(adapter)).get();
 }
 #endif

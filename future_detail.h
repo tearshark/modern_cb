@@ -1,9 +1,9 @@
+ï»¿//
+//é€šè¿‡ç°ä»£å›è°ƒ(Modern Callback)ï¼Œ ä½¿ç”¨å›è°ƒé€‚é…å™¨æ¨¡å‹ï¼Œ
+//å°†å¼‚æ­¥å›è°ƒå‡½æ•°æ‰©å±•åˆ°æ”¯æŒfutureæ¨¡å¼ï¼Œè°ƒç”¨é“¾æ¨¡å¼ï¼Œä»¥åŠåç¨‹ã€‚
 //
-//Í¨¹ıÏÖ´ú»Øµ÷(Modern Callback)£¬ Ê¹ÓÃ»Øµ÷ÊÊÅäÆ÷Ä£ĞÍ£¬
-//½«Òì²½»Øµ÷º¯ÊıÀ©Õ¹µ½Ö§³ÖfutureÄ£Ê½£¬µ÷ÓÃÁ´Ä£Ê½£¬ÒÔ¼°Ğ­³Ì¡£
-//
-//future¿âÓĞ¶àÖÖ£¬µ«Ó¦µ±¶¼Ìá¹©×ñÑ­promise/future¶Ô£¬¼æÈİstd::promise/std::futureÓÃ·¨
-//ÕâÑùµÄ»°£¬¿ÉÒÔ×öÒ»¸ö¸ü¼ÓÍ¨ÓÃµÄÖ§³ÖfutureµÄcallbackÀà
+//futureåº“æœ‰å¤šç§ï¼Œä½†åº”å½“éƒ½æä¾›éµå¾ªpromise/futureå¯¹ï¼Œå…¼å®¹std::promise/std::futureç”¨æ³•
+//è¿™æ ·çš„è¯ï¼Œå¯ä»¥åšä¸€ä¸ªæ›´åŠ é€šç”¨çš„æ”¯æŒfutureçš„callbackç±»
 
 #pragma once
 
@@ -11,18 +11,18 @@ namespace modern_callback
 {
 	namespace future_detail
 	{
-		//ÊµÏÖcallback_tµÄ»ùÀà£¬±ÜÃâĞ´Ò»Ğ©ÖØ¸´´úÂë
+		//å®ç°callback_tçš„åŸºç±»ï¼Œé¿å…å†™ä¸€äº›é‡å¤ä»£ç 
 		template<typename _Promise_traits, typename _Result_t>
 		struct callback_base_t
 		{
-			//»Øµ÷º¯ÊıµÄ½á¹ûÀàĞÍ£¬ÒÑ¾­ÅÅ³ıµôÁËÒì³£²ÎÊı
+			//å›è°ƒå‡½æ•°çš„ç»“æœç±»å‹ï¼Œå·²ç»æ’é™¤æ‰äº†å¼‚å¸¸å‚æ•°
 			using result_type = _Result_t;
 
-			//Í¨¹ı_Promise_traits»ñÈ¡ÕæÕıµÄpromiseÀàĞÍ
+			//é€šè¿‡_Promise_traitsè·å–çœŸæ­£çš„promiseç±»å‹
 			using promise_type = typename _Promise_traits::template promise_type<result_type>;
 
-			//´ËÀà³ÖÓĞÒ»¸östd::promise<_Result_t>£¬±ãÓÚÉèÖÃÖµºÍÒì³£
-			//¶ø½«Óëpromise¹ØÁªµÄfuture×÷Îª·µ»ØÖµ_Return_t£¬ÈÃtostring_async·µ»Ø¡£
+			//æ­¤ç±»æŒæœ‰ä¸€ä¸ªstd::promise<_Result_t>ï¼Œä¾¿äºè®¾ç½®å€¼å’Œå¼‚å¸¸
+			//è€Œå°†ä¸promiseå…³è”çš„futureä½œä¸ºè¿”å›å€¼_Return_tï¼Œè®©tostring_asyncè¿”å›ã€‚
 			mutable promise_type _promise;
 
 			auto get_future() const
@@ -31,13 +31,13 @@ namespace modern_callback
 			}
 		};
 
-		//´ËÀàµÄÊµÀı×÷ÎªÕæÕıµÄcallback£¬½»¸øÒì²½»Øµ÷º¯Êı£¬Ìæ»»token¡£
-		//ÔÚÊµ¼ÊÓ¦ÓÃÖĞ£¬ĞèÒªÕë¶ÔÊÇ·ñÓĞÒì³£²ÎÊı£¬½á¹ûÖµÎª0£¬1£¬¶à¸öµÈÇé¿ö×öÌØÊâ´¦Àí£¬¹Ê»¹ĞèÒªÍ¨¹ı¸ü¶àµÄÆ«ÌØ»¯°æ±¾À´Ö§³Ö¡£
-		//¾ßÌåµÄÒì³£²ÎÊı£¬ĞèÒª¸ù¾İÊµ¼ÊÓ¦ÓÃÈ¥ÌØÀï»¯¡£ÕâÀï½öÑİÊ¾Í¨¹ıstd::exception_ptr×÷ÎªÒì³£´«µİµÄÇé¿ö¡£
+		//æ­¤ç±»çš„å®ä¾‹ä½œä¸ºçœŸæ­£çš„callbackï¼Œäº¤ç»™å¼‚æ­¥å›è°ƒå‡½æ•°ï¼Œæ›¿æ¢tokenã€‚
+		//åœ¨å®é™…åº”ç”¨ä¸­ï¼Œéœ€è¦é’ˆå¯¹æ˜¯å¦æœ‰å¼‚å¸¸å‚æ•°ï¼Œç»“æœå€¼ä¸º0ï¼Œ1ï¼Œå¤šä¸ªç­‰æƒ…å†µåšç‰¹æ®Šå¤„ç†ï¼Œæ•…è¿˜éœ€è¦é€šè¿‡æ›´å¤šçš„åç‰¹åŒ–ç‰ˆæœ¬æ¥æ”¯æŒã€‚
+		//å…·ä½“çš„å¼‚å¸¸å‚æ•°ï¼Œéœ€è¦æ ¹æ®å®é™…åº”ç”¨å»ç‰¹é‡ŒåŒ–ã€‚è¿™é‡Œä»…æ¼”ç¤ºé€šè¿‡std::exception_pträ½œä¸ºå¼‚å¸¸ä¼ é€’çš„æƒ…å†µã€‚
 		template<typename...>
 		struct callback_t;
 
-		//ÎŞÒì³££¬ÎŞ½á¹ûµÄcallbackÀàĞÍ£ºvoid()
+		//æ— å¼‚å¸¸ï¼Œæ— ç»“æœçš„callbackç±»å‹ï¼švoid()
 		template<typename _Promise_traits>
 		struct callback_t<_Promise_traits> : public callback_base_t<_Promise_traits, void>
 		{
@@ -49,7 +49,7 @@ namespace modern_callback
 			}
 		};
 
-		//ÓĞÒì³££¬ÎŞ½á¹ûµÄcallbackÀàĞÍ£ºvoid(exception_ptr)
+		//æœ‰å¼‚å¸¸ï¼Œæ— ç»“æœçš„callbackç±»å‹ï¼švoid(exception_ptr)
 		template<typename _Promise_traits>
 		struct callback_t<_Promise_traits, std::exception_ptr> : public callback_base_t<_Promise_traits, void>
 		{
@@ -64,7 +64,7 @@ namespace modern_callback
 			}
 		};
 
-		//ÎŞÒì³££¬µ¥½á¹ûµÄcallbackÀàĞÍ£ºvoid(_Result_t)
+		//æ— å¼‚å¸¸ï¼Œå•ç»“æœçš„callbackç±»å‹ï¼švoid(_Result_t)
 		template<typename _Promise_traits, typename _Result_t>
 		struct callback_t<_Promise_traits, _Result_t> : public callback_base_t<_Promise_traits, _Result_t>
 		{
@@ -77,7 +77,7 @@ namespace modern_callback
 			}
 		};
 
-		//ÓĞÒì³££¬µ¥½á¹ûµÄcallbackÀàĞÍ£ºvoid(std::exception_ptr, _Result_t)
+		//æœ‰å¼‚å¸¸ï¼Œå•ç»“æœçš„callbackç±»å‹ï¼švoid(std::exception_ptr, _Result_t)
 		template<typename _Promise_traits, typename _Result_t>
 		struct callback_t<_Promise_traits, std::exception_ptr, _Result_t> : public callback_base_t<_Promise_traits, _Result_t>
 		{
@@ -93,7 +93,7 @@ namespace modern_callback
 			}
 		};
 
-		//ÎŞÒì³££¬¶à½á¹ûµÄcallbackÀàĞÍ£ºvoid(_Result_t...)
+		//æ— å¼‚å¸¸ï¼Œå¤šç»“æœçš„callbackç±»å‹ï¼švoid(_Result_t...)
 		template<typename _Promise_traits, typename... _Result_t>
 		struct callback_t<_Promise_traits, _Result_t...> : public callback_base_t<_Promise_traits, std::tuple<_Result_t...> >
 		{
@@ -107,7 +107,7 @@ namespace modern_callback
 			}
 		};
 
-		//ÓĞÒì³££¬¶à½á¹ûµÄcallbackÀàĞÍ£ºvoid(std::exception_ptr, _Result_t...)
+		//æœ‰å¼‚å¸¸ï¼Œå¤šç»“æœçš„callbackç±»å‹ï¼švoid(std::exception_ptr, _Result_t...)
 		template <typename _Promise_traits, typename... _Result_t>
 		struct callback_t<_Promise_traits, std::exception_ptr, _Result_t...> : public callback_base_t<_Promise_traits, std::tuple<_Result_t...> >
 		{
@@ -126,7 +126,7 @@ namespace modern_callback
 
 
 
-		//Óëcallback_tÅäÌ×µÄ»ñµÃ_Return_tµÄÀà
+		//ä¸callback_té…å¥—çš„è·å¾—_Return_tçš„ç±»
 		template<typename _Future_traits, typename _Result_t>
 		struct return_t
 		{
@@ -144,7 +144,7 @@ namespace modern_callback
 		};
 
 
-		//ÀûÓÃcallback_t + return_t ÊµÏÖµÄcallbackÊÊÅäÆ÷
+		//åˆ©ç”¨callback_t + return_t å®ç°çš„callbacké€‚é…å™¨
 		template<typename _Token_as_callable_t, typename... _Result_t>
 		struct adapter_impl_t
 		{
@@ -153,7 +153,7 @@ namespace modern_callback
 			using result_type = typename callback_type::result_type;
 			using return_type = return_t<traits_type, result_type>;
 
-			static std::tuple<callback_type, return_type> traits(const _Token_as_callable_t& /*Ã»ÈË¹ØĞÄÕâ¸ö±äÁ¿*/)
+			static std::tuple<callback_type, return_type> traits(const _Token_as_callable_t& /*æ²¡äººå…³å¿ƒè¿™ä¸ªå˜é‡*/)
 			{
 				callback_type callback{};
 				auto future = callback.get_future();
