@@ -45,7 +45,7 @@ auto tostring_async(_Input_t&& value, _Callable_t&& token)
 			callback(std::to_string(value));
 		}).detach();
 
-		MODERN_CALLBACK_RETURN();
+	MODERN_CALLBACK_RETURN();
 }
 
 //演示异步库有多个异步回调函数，只要按照Modern Callback范式去做回调，就不再需要写额外的代码，就可以适配到future+librf，以及更多的其他库
@@ -61,7 +61,7 @@ auto add_async(_Ty1&& val1, _Ty2&& val2, _Callable_t&& token)
 			callback(val1 + val2);
 		}).detach();
 
-		MODERN_CALLBACK_RETURN();
+	MODERN_CALLBACK_RETURN();
 }
 
 //演示异步库有多个异步回调函数，只要按照Modern Callback范式去做回调，就不再需要写额外的代码，就可以适配到future+librf，以及更多的其他库
@@ -83,16 +83,18 @@ auto muldiv_async(_Ty1&& val1, _Ty2&& val2, _Callable_t&& token)
 				callback(nullptr, v1, val1 / val2);
 		}).detach();
 
-		MODERN_CALLBACK_RETURN();
+	MODERN_CALLBACK_RETURN();
 }
+//----------------------------------------------------------------------------------------------------------------------
 
-#include "use_future.h"
 
-static void example_future()
+
+
+//使用lambda作为异步回调函数，传统用法
+static void example_lambda()
 {
 	using namespace std::literals;
 
-	//使用lambda作为异步回调函数，传统用法
 	tostring_async_originalism(-1.0, [](std::string&& value)
 		{
 			std::cout << value << std::endl;
@@ -106,8 +108,14 @@ static void example_future()
 
 	std::this_thread::sleep_for(0.5s);
 	std::cout << "......" << std::endl;
+}
 
-	//支持future的用法
+
+#include "use_future.h"
+
+//支持future的用法
+static void example_future()
+{
 	std::future<std::string> f1 = tostring_async_originalism_future(5);
 	std::cout << f1.get() << std::endl;
 
@@ -115,32 +123,26 @@ static void example_future()
 	std::cout << f2.get() << std::endl;
 }
 
+
 #include "librf.h"
 #include "use_librf.h"
 
+//支持librf的用法
 static void example_librf()
 {
-	//支持librf的用法
 	GO
 	{
-#ifndef __clang__
 		try
-#endif
 		{
 			int val = co_await add_async(1, 2, use_librf);
 			std::cout << val << std::endl;
 
 			//muldiv_async函数可能会抛异常，取决于val是否是0
 			//异常将会带回到本协程里的代码，所以需要try-catch
-			auto ab = co_await muldiv_async(9, val, use_librf);
-			//C++17:
-			//auto [a, b] = co_await muldiv_async(9, val, use_librf);
-
-			std::string result = co_await tostring_async(std::get<0>(ab) + std::get<1>(ab), use_librf);
-
+			auto [a, b] = co_await muldiv_async(9, val, use_librf);
+			std::string result = co_await tostring_async(a + b, use_librf);
 			std::cout << result << std::endl;
 		}
-#ifndef __clang__
 		catch (const std::exception & e)
 		{
 			std::cout << "exception signal : " << e.what() << std::endl;
@@ -149,14 +151,17 @@ static void example_librf()
 		{
 			std::cout << "exception signal : who knows?" << std::endl;
 		}
-#endif
 	};
 
 	resumef::this_scheduler()->run_until_notask();
 }
 
+
+
+
 int main()
 {
+	example_lambda();
 	example_future();
 	example_librf();
 
