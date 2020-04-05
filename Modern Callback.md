@@ -373,7 +373,7 @@
 
 那么，modern callback引入的modern_callback_adapter_t是不是会严重影响效率呢？答案是：不会的。我们以编译出来的汇编代码为例：
 
-![avatar](asm_comparison.jpg)
+![汇编对比图](https://github.com/tearshark/modern_cb/raw/master/asm_comparison.png)
 
 可以看到，modern callback对比originalism callback，仅仅多引入了一个'xor eax，eax'指令。
 
@@ -395,8 +395,8 @@
 
 注一：本文最先发表于知乎，随后发表于purecpp。原文链接：
 
-    http://purecpp.org/detail?id=2114
-    http://purecpp.org/detail?id=2116
+    <http://purecpp.org/detail?id=2114>
+    <http://purecpp.org/detail?id=2116>
 
 注二：范例代码不再考虑写文章的需要而进行简化了，因此，可能会更难看一些。但增加了下列功能：
 
