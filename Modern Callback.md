@@ -373,7 +373,7 @@
 
 那么，modern callback引入的modern_callback_adapter_t是不是会严重影响效率呢？答案是：不会的。我们以编译出来的汇编代码为例：
 
-![汇编对比图](https://github.com/tearshark/modern_cb/raw/master/asm_comparison.png)
+![汇编对比图](https://raw.githubusercontent.com/tearshark/modern_cb/master/asm_comparison.png)
 
 可以看到，modern callback对比originalism callback，仅仅多引入了一个'xor eax，eax'指令。
 
