@@ -28,6 +28,8 @@
 //部分并不直接使用，而是通过适配器去另外处理。这样给予适配器一次扩展到future模式，调用链模式的机会，以及支持协程的机会。
 
 #pragma once
+#ifndef MODERN_CALLBACK_HEADER_FILE
+#define MODERN_CALLBACK_HEADER_FILE
 
 #include <tuple>
 
@@ -89,3 +91,5 @@ auto tostring_async(_Input_t&& value, _Callable_t&& token)
 	return std::move(std::get<1>(adapter)).get();
 }
 #endif
+
+#endif //MODERN_CALLBACK_HEADER_FILE
