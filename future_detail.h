@@ -21,6 +21,9 @@ namespace modern_callback
 			//通过_Promise_traits获取真正的promise类型
 			using promise_type = typename _Promise_traits::template promise_type<result_type>;
 
+			//通过_Promise_traits获取真正的future类型
+			using future_type = typename _Promise_traits::template future_type<result_type>;
+
 			//此类持有一个std::promise<_Result_t>，便于设置值和异常
 			//而将与promise关联的future作为返回值_Return_t，让tostring_async返回。
 			mutable promise_type _promise;
@@ -150,8 +153,9 @@ namespace modern_callback
 		{
 			using traits_type = std::remove_reference_t<_Token_as_callable_t>;
 			using callback_type = callback_t<traits_type, _Result_t...>;
-			using result_type = typename callback_type::result_type;
-			using return_type = return_t<traits_type, result_type>;
+			using return_type = return_t<traits_type, typename callback_type::result_type>;
+			using result_type = typename return_type::result_type;
+			using future_type = typename return_type::future_type;
 
 			static std::tuple<callback_type, return_type> traits(const _Token_as_callable_t& /*没人关心这个变量*/)
 			{
