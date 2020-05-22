@@ -1,5 +1,5 @@
-﻿//依赖 https://github.com/tearshark/modern_cb.git 项目
-//依赖 https://github.com/tearshark/librf.git 项目
+﻿//依赖 https://github.com/tearshark/modern_cb 项目
+//依赖 https://github.com/tearshark/librf 项目
 
 #include <future>
 #include <string>
@@ -85,16 +85,14 @@ auto muldiv_async(_Ty1&& val1, _Ty2&& val2, _Callable_t&& token)
 
 	MODERN_CALLBACK_RETURN();
 }
-//----------------------------------------------------------------------------------------------------------------------
 
+#include "use_future.h"
 
-
-
-//使用lambda作为异步回调函数，传统用法
-static void example_lambda()
+static void example_future()
 {
 	using namespace std::literals;
 
+	//使用lambda作为异步回调函数，传统用法
 	tostring_async_originalism(-1.0, [](std::string&& value)
 		{
 			std::cout << value << std::endl;
@@ -108,14 +106,8 @@ static void example_lambda()
 
 	std::this_thread::sleep_for(0.5s);
 	std::cout << "......" << std::endl;
-}
 
-
-#include "use_future.h"
-
-//支持future的用法
-static void example_future()
-{
+	//支持future的用法
 	std::future<std::string> f1 = tostring_async_originalism_future(5);
 	std::cout << f1.get() << std::endl;
 
@@ -123,13 +115,12 @@ static void example_future()
 	std::cout << f2.get() << std::endl;
 }
 
-
 #include "librf.h"
 #include "use_librf.h"
 
-//支持librf的用法
 static void example_librf()
 {
+	//支持librf的用法
 	GO
 	{
 		try
@@ -140,7 +131,9 @@ static void example_librf()
 			//muldiv_async函数可能会抛异常，取决于val是否是0
 			//异常将会带回到本协程里的代码，所以需要try-catch
 			auto [a, b] = co_await muldiv_async(9, val, use_librf);
+
 			std::string result = co_await tostring_async(a + b, use_librf);
+
 			std::cout << result << std::endl;
 		}
 		catch (const std::exception & e)
@@ -156,14 +149,8 @@ static void example_librf()
 	resumef::this_scheduler()->run_until_notask();
 }
 
-
-
-
-int main()
+int main(int argc, char* argv[])
 {
-	example_lambda();
 	example_future();
 	example_librf();
-
-	return 0;
 }

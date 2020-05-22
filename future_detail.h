@@ -154,7 +154,7 @@ namespace modern_callback
 			using traits_type = std::remove_reference_t<_Token_as_callable_t>;
 			using callback_type = callback_t<traits_type, _Result_t...>;
 			using return_type = return_t<traits_type, typename callback_type::result_type>;
-			using result_type = typename return_type::result_type;
+			using result_type = typename return_type::future_type;
 			using future_type = typename return_type::future_type;
 
 			static std::tuple<callback_type, return_type> traits(const _Token_as_callable_t& /*没人关心这个变量*/)
