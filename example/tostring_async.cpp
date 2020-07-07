@@ -6,18 +6,10 @@
 #include <iostream>
 
 #include "modern_callback.h"
-#include "async_wrapper.hpp"
 
 //原旨主义的异步函数，其回调写法大致如下
 template<typename _Input_t, typename _Callable_t>
 void tostring_async_originalism(_Input_t&& value, _Callable_t&& token)
-{
-	std::thread([callback = std::move(token), value = std::forward<_Input_t>(value)]
-		{
-			callback(std::to_string(value));
-		}).detach();
-}
-void tostring_async_originalism2(int value, std::function<void(std::string)>&& token)
 {
 	std::thread([callback = std::move(token), value = std::forward<_Input_t>(value)]
 		{
@@ -121,9 +113,6 @@ static void example_future()
 
 	std::future<std::string> f2 = tostring_async(6.0f, std_future);
 	std::cout << f2.get() << std::endl;
-
-	std::future<std::string> f3 = async_call(&tostring_async_originalism2, 99, placeholder::_cb(std_future));
-	std::cout << f3.get() << std::endl;
 }
 
 #include "librf.h"
