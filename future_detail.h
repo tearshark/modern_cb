@@ -48,7 +48,8 @@ namespace modern_callback
 
 			void operator()() const
 			{
-				this->_promise.set_value();
+				promise_type p = std::move(this->_promise);	//杜绝可能this在回调中被析构
+				p.set_value();
 			}
 		};
 
@@ -60,10 +61,11 @@ namespace modern_callback
 
 			void operator()(std::exception_ptr eptr) const
 			{
+				promise_type p = std::move(this->_promise);
 				if (!eptr)
-					this->_promise.set_value();
+					p.set_value();
 				else
-					this->_promise.set_exception(std::move(eptr));
+					p.set_exception(std::move(eptr));
 			}
 		};
 
@@ -76,7 +78,8 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(Arg&& arg) const
 			{
-				this->_promise.set_value(std::forward<Arg>(arg));
+				promise_type p = std::move(this->_promise);
+				p.set_value(std::forward<Arg>(arg));
 			}
 		};
 
@@ -89,10 +92,11 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(std::exception_ptr eptr, Arg&& arg) const
 			{
+				promise_type p = std::move(this->_promise);
 				if (!eptr)
-					this->_promise.set_value(std::forward<Arg>(arg));
+					p.set_value(std::forward<Arg>(arg));
 				else
-					this->_promise.set_exception(std::move(eptr));
+					p.set_exception(std::move(eptr));
 			}
 		};
 
@@ -106,7 +110,8 @@ namespace modern_callback
 			void operator()(Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
-				this->_promise.set_value(std::make_tuple(std::forward<Args>(args)...));
+				promise_type p = std::move(this->_promise);
+				p.set_value(std::make_tuple(std::forward<Args>(args)...));
 			}
 		};
 
@@ -120,10 +125,11 @@ namespace modern_callback
 			void operator()(std::exception_ptr eptr, Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
+				promise_type p = std::move(this->_promise);
 				if (!eptr)
-					this->_promise.set_value(std::make_tuple(std::forward<Args>(args)...));
+					p.set_value(std::make_tuple(std::forward<Args>(args)...));
 				else
-					this->_promise.set_exception(std::move(eptr));
+					p.set_exception(std::move(eptr));
 			}
 		};
 
