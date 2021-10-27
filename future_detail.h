@@ -11,6 +11,44 @@ namespace modern_callback
 {
 	namespace future_detail
 	{
+		//由于std::function<>只接受 CopyConstructible 且 CopyAssignable 的 Callable target
+		//故需要 callback_base_t 也支持 CopyConstructible 和 CopyAssignable
+		//而常见的 promise 实现，如 std::promise<> 是不支持 CopyConstructible 和 CopyAssignable
+		//所以，promise_copyable_storage_t 提供一个支持 CopyConstructible 和 CopyAssignable 的存储类
+		template<typename _Promise_type, bool _Copyable = std::is_copy_constructible_v<_Promise_type> && std::is_copy_assignable_v<_Promise_type>>
+		struct promise_copyable_storage_t
+		{
+			using type = _Promise_type;
+
+			std::shared_ptr<_Promise_type> _value{ std::make_shared<_Promise_type>() };
+
+			_Promise_type& ref_value()
+			{
+				return *_value;
+			}
+			_Promise_type move_value()
+			{
+				return std::move(*_value);
+			}
+		};
+
+		template<typename _Promise_type>
+		struct promise_copyable_storage_t<_Promise_type, true>
+		{
+			using type = _Promise_type;
+
+			_Promise_type _value;
+
+			_Promise_type& ref_value()
+			{
+				return _value;
+			}
+			_Promise_type move_value()
+			{
+				return std::move(_value);
+			}
+		};
+
 		//实现callback_t的基类，避免写一些重复代码
 		template<typename _Promise_traits, typename _Result_t>
 		struct callback_base_t
@@ -26,11 +64,11 @@ namespace modern_callback
 
 			//此类持有一个std::promise<_Result_t>，便于设置值和异常
 			//而将与promise关联的future作为返回值_Return_t，让tostring_async返回。
-			mutable promise_type _promise;
+			mutable promise_copyable_storage_t<promise_type> _promise;
 
 			auto get_future() const
 			{
-				return this->_promise.get_future();
+				return this->_promise.ref_value().get_future();
 			}
 		};
 
@@ -48,7 +86,7 @@ namespace modern_callback
 
 			void operator()() const
 			{
-				promise_type p = std::move(this->_promise);	//杜绝可能this在回调中被析构
+				promise_type p = this->_promise.move_value();	//杜绝可能this在回调中被析构
 				p.set_value();
 			}
 		};
@@ -61,7 +99,7 @@ namespace modern_callback
 
 			void operator()(std::exception_ptr eptr) const
 			{
-				promise_type p = std::move(this->_promise);
+				promise_type p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value();
 				else
@@ -78,7 +116,7 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(Arg&& arg) const
 			{
-				promise_type p = std::move(this->_promise);
+				promise_type p = this->_promise.move_value();
 				p.set_value(std::forward<Arg>(arg));
 			}
 		};
@@ -92,7 +130,7 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(std::exception_ptr eptr, Arg&& arg) const
 			{
-				promise_type p = std::move(this->_promise);
+				promise_type p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value(std::forward<Arg>(arg));
 				else
@@ -110,7 +148,7 @@ namespace modern_callback
 			void operator()(Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
-				promise_type p = std::move(this->_promise);
+				promise_type p = this->_promise.move_value();
 				p.set_value(std::make_tuple(std::forward<Args>(args)...));
 			}
 		};
@@ -125,7 +163,7 @@ namespace modern_callback
 			void operator()(std::exception_ptr eptr, Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
-				promise_type p = std::move(this->_promise);
+				promise_type p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value(std::make_tuple(std::forward<Args>(args)...));
 				else
