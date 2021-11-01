@@ -84,9 +84,9 @@
 哦，这个古老而富有魅力的美女，一下子就让我们拨云见日。赶紧的，支持下协程！以下代码以支持librf为例：
 
     template<typename _Input_t>
-    resumef::future_t<std::string> tostring_async(_Input_t value)
+    librf::future_t<std::string> tostring_async(_Input_t value)
     {
-        resumef::promise_t<std::string> awaitable;
+        librf::promise_t<std::string> awaitable;
         std::thread([value, st = awaitable._state]
             {
                 st->set_value(std::to_string(value));
@@ -314,10 +314,10 @@
     template<typename _Result_t>
     struct use_awaitable_callback_t
     {
-        using promise_type = resumef::promise_t<_Result_t>;
+        using promise_type = librf::promise_t<_Result_t>;
         using state_type = typename promise_type::state_type;
 
-        resumef::counted_ptr<state_type> _state;
+        librf::counted_ptr<state_type> _state;
 
         void operator()(_Result_t&& value) const
         {
@@ -335,8 +335,8 @@
     template<typename _Result_t>
     struct modern_callback_adapter_t<use_awaitable_t, _Result_t>
     {
-        using promise_type = resumef::promise_t<_Result_t>;
-        using return_type = resumef::future_t<_Result_t>;
+        using promise_type = librf::promise_t<_Result_t>;
+        using return_type = librf::future_t<_Result_t>;
         using callback_type = use_awaitable_callback_t<_Result_t>;
 
         static std::tuple<callback_type, return_type> traits(const use_awaitable_t&)

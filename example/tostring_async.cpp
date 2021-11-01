@@ -146,7 +146,7 @@ static void example_librf()
 		}
 	};
 
-	resumef::this_scheduler()->run_until_notask();
+	librf::this_scheduler()->run_until_notask();
 }
 
 int main(int argc, char* argv[])

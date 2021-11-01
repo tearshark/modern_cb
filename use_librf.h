@@ -13,10 +13,10 @@ namespace modern_callback
 		struct use_librf_t
 		{
 			template<typename _Result_t>
-			using promise_type = resumef::awaitable_t<_Result_t>;
+			using promise_type = librf::awaitable_t<_Result_t>;
 
 			template<typename _Result_t>
-			using future_type = resumef::future_t<_Result_t>;
+			using future_type = librf::future_t<_Result_t>;
 		};
 	}
 
