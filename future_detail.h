@@ -86,7 +86,7 @@ namespace modern_callback
 
 			void operator()() const
 			{
-				promise_type p = this->_promise.move_value();	//杜绝可能this在回调中被析构
+				auto&& p = this->_promise.move_value();	//杜绝可能this在回调中被析构
 				p.set_value();
 			}
 		};
@@ -99,7 +99,7 @@ namespace modern_callback
 
 			void operator()(std::exception_ptr eptr) const
 			{
-				promise_type p = this->_promise.move_value();
+				auto&& p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value();
 				else
@@ -116,7 +116,7 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(Arg&& arg) const
 			{
-				promise_type p = this->_promise.move_value();
+				auto&& p = this->_promise.move_value();
 				p.set_value(std::forward<Arg>(arg));
 			}
 		};
@@ -130,7 +130,7 @@ namespace modern_callback
 			template<typename Arg>
 			void operator()(std::exception_ptr eptr, Arg&& arg) const
 			{
-				promise_type p = this->_promise.move_value();
+				auto&& p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value(std::forward<Arg>(arg));
 				else
@@ -148,7 +148,7 @@ namespace modern_callback
 			void operator()(Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
-				promise_type p = this->_promise.move_value();
+				auto&& p = this->_promise.move_value();
 				p.set_value(std::make_tuple(std::forward<Args>(args)...));
 			}
 		};
@@ -163,7 +163,7 @@ namespace modern_callback
 			void operator()(std::exception_ptr eptr, Args&&... args) const
 			{
 				static_assert(sizeof...(Args) == sizeof...(_Result_t), "");
-				promise_type p = this->_promise.move_value();
+				auto&& p = this->_promise.move_value();
 				if (!eptr)
 					p.set_value(std::make_tuple(std::forward<Args>(args)...));
 				else
