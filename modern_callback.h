@@ -63,11 +63,12 @@ namespace modern_callback
 }
 
 #define MODERN_CALLBACK_TRAITS(_Token_value, _Signature_t) \
-	using _Adapter_t__ = modern_callback::adapter_t<std::remove_cv_t<std::remove_reference_t<_Callable_t>>, _Signature_t>; \
+	using _Adapter_t__ = modern_callback::adapter_t<std::decay_t<_Callable_t>, _Signature_t>; \
 	auto _Adapter_value__ = _Adapter_t__::traits(std::forward<_Callable_t>(_Token_value))
 #define MODERN_CALLBACK_CALL() std::move(std::get<0>(_Adapter_value__))
 #define MODERN_CALLBACK_RETURN() return std::move(std::get<1>(_Adapter_value__)).get()
-#define MODERN_CALLBACK_RESULT(_Signature_t) typename modern_callback::adapter_t<std::remove_cv_t<std::remove_reference_t<_Callable_t>>, _Signature_t>::future_type
+#define MODERN_CALLBACK_RESULT_TYPE(_Signature_t) typename modern_callback::adapter_t<std::decay_t<_Callable_t>, _Signature_t>::future_type
+#define MODERN_CALLBACK_CALLBACK_TYPE(_Signature_t) typename modern_callback::adapter_t<std::decay_t<_Callable_t>, _Signature_t>::callback_type
 
 #if 0
 //tostring_async demonstrates that in other threads, the input value of _Input_t is converted to _Result_t of type std :: string.
